@@ -4,8 +4,8 @@ library(rstan)
 # 事前分布
 a <- 2
 b <- 2
-tibble(x = seq(0, 1, 0.01), d = dbeta(x, a, b)) %>%
-  ggplot(aes(x, d)) +
+tibble(theta = seq(0, 1, 0.01), density = dbeta(theta, a, b)) %>%
+  ggplot(aes(theta, density)) +
     geom_line()
 
 df.results <- readr::read_csv(
@@ -82,6 +82,7 @@ df.results %>%
 df.results %>%
 
   dplyr::mutate(
+    # 対戦が進む度に事後分布を推定する
     data = map2(game, cumsum_win, function(game, cumsum_win) {
       tibble(
         x = seq(0, 1, 0.001),
